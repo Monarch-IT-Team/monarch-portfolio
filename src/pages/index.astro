@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import Intro from '../components/Intro.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import I18n from '../components/I18n.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
+import Trajectory from '../components/sections/Trajectory.astro';
+import Skills from '../components/sections/Skills.astro';
+import Projects from '../components/sections/Projects.astro';
+import Monexarch from '../components/sections/Monexarch.astro';
+import Signal from '../components/sections/Signal.astro';
+import SystemPanel from '../components/SystemPanel.astro';
+import { starfield } from '../lib/starfield';
+import { dict, LANGS } from '../i18n/dict';
+import { loadProjects } from '../lib/projects';
+import { SITE } from '../config';
+
+const projects = loadProjects();
+
+// Project descriptions become regular translation keys: proj.0.desc, proj.1.desc …
+const full = structuredClone(dict);
+for (const lang of LANGS) projects.forEach((p, i) => (full[lang][`proj.${i}.desc`] = p.desc[lang]));
+
+// The static HTML is rendered in English; the browser switches to the visitor's language.
+const t = (key: string) => full.en[key] ?? key;
+const word = (n: number) => full.en[`num.${n}`] ?? String(n);
+---
+
+<Base title={t('meta.title')} description={t('meta.desc')}>
+  <Intro t={t} />
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="scene-fallback" aria-hidden="true" style={`--stars:${starfield()}`}></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="labels" id="labels" aria-hidden="true"></div>
+
+  <Header t={t} />
+
+  <main>
+    <Hero t={t} />
+    <About t={t} word={word} />
+    <Trajectory t={t} />
+    <Skills t={t} />
+    <Projects t={t} projects={projects} />
+    <Monexarch t={t} />
+    <Signal t={t} />
+  </main>
+
+  <Footer t={t} />
+  <SystemPanel t={t} projects={projects} />
+
+  <I18n data={{ dict: full, since: SITE.codingSince, birth: SITE.birthDate }} />
+  <script>
+    import '../scripts/main';
+  </script>
+</Base>

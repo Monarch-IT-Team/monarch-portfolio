@@ -1,0 +1,150 @@
+---
+// Language runtime. Runs synchronously at the end of <body> so the right language
+// is in place before the first paint. Default = the visitor's system language.
+interface Props {
+  data: { dict: Record<string, Record<string, string>>; since: number; birth: string };
+}
+const { data } = Astro.props;
+const json = JSON.stringify(data).replace(/</g, '\\u003c');
+---
+
+<script type="application/json" id="mx-i18n" set:html={json} />
+<script is:inline>
+  (function () {
+    var data = JSON.parse(document.getElementById('mx-i18n').textContent);
+    var LANGS = ['uz', 'ru', 'en'];
+    var root = document.documentElement;
+
+    function stored() {
+      try {
+        return localStorage.getItem('mx-lang');
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function detect() {
+      var s = stored();
+      if (LANGS.indexOf(s) > -1) return s;
+      var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'];
+      for (var i = 0; i < list.length; i++) {
+        var c = String(list[i] || '').toLowerCase().slice(0, 2);
+        if (LANGS.indexOf(c) > -1) return c;
+      }
+      return 'en';
+    }
+
+    var now = new Date();
+    var b = new Date(data.birth);
+    var age = now.getFullYear() - b.getFullYear() -
+      (now.getMonth() < b.getMonth() || (now.getMonth() === b.getMonth() && now.getDate() < b.getDate()) ? 1 : 0);
+    var years = now.getFullYear() - data.since;
+
+    function plural(d, lang, key, n) {
+      var cat = 'other';
+      try {
+        cat = new Intl.PluralRules(lang).select(n);
+      } catch (e) {}
+      return d[key + '.' + cat] || d[key + '.other'];
+    }
+
+    function cap(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    function each(sel, fn) {
+      var n = document.querySelectorAll(sel);
+      for (var i = 0; i < n.length; i++) fn(n[i]);
+    }
+
+    function apply(lang) {
+      var d = data.dict[lang];
+      if (!d) return;
+      root.lang = lang;
+      root.setAttribute('data-lang', lang);
+
+      each('[data-i18n]', function (el) {
+        var v = d[el.getAttribute('data-i18n')];
+        if (v != null) el.textContent = v;
+      });
+      each('[data-i18n-attr]', function (el) {
+        el.getAttribute('data-i18n-attr').split(';').forEach(function (pair) {
+          var kv = pair.split(':');
+          var v = d[kv[1]];
+          if (v != null) el.setAttribute(kv[0], v);
+        });
+      });
+
+      var locale = lang === 'uz' ? 'uz-Latn' : lang;
+      var dateFmt;
+      try {
+        dateFmt = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' });
+      } catch (e) {
+        dateFmt = new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric' });
+      }
+
+      each('[data-dyn]', function (el) {
+        switch (el.getAttribute('data-dyn')) {
+          case 'age':
+            el.textContent = age;
+            break;
+          case 'ageUnit':
+            el.textContent = plural(d, lang, 'plural.age', age);
+            break;
+          case 'years':
+            el.textContent = years;
+            break;
+          case 'yearsUnit':
+            el.textContent = plural(d, lang, 'plural.year', years);
+            break;
+          case 'aboutTitle':
+            var w = d['num.' + years] || String(years);
+            el.textContent = d['about.title'].split('{W}').join(cap(w));
+            break;
+          case 'date':
+            el.textContent = dateFmt.format(new Date(el.getAttribute('data-date')));
+            break;
+          case 'year':
+            el.textContent = now.getFullYear();
+            break;
+        }
+      });
+
+      document.title = d['meta.title'];
+      var meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute('content', d['meta.desc']);
+      each('[data-lang-btn]', function (btn) {
+        btn.setAttribute('aria-pressed', String(btn.getAttribute('data-lang-btn') === lang));
+      });
+      window.dispatchEvent(new CustomEvent('mx:lang', { detail: lang }));
+    }
+
+    var current = detect();
+    apply(current);
+
+    window.__mx = {
+      get lang() {
+        return current;
+      },
+      dict: data.dict,
+      years: years,
+      t: function (key) {
+        var d = data.dict[current] || {};
+        return d[key] != null ? d[key] : key;
+      },
+      setLang: function (l) {
+        if (LANGS.indexOf(l) < 0 || l === current) return;
+        current = l;
+        try {
+          localStorage.setItem('mx-lang', l);
+        } catch (e) {}
+        apply(l);
+      },
+    };
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('[data-lang-btn]') : null;
+      if (btn) window.__mx.setLang(btn.getAttribute('data-lang-btn'));
+    });
+  })();
+</script>

@@ -1,0 +1,36 @@
+---
+// Still the system, seen from a little farther; the text moves to the right.
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+const steps = [0, 1, 2, 3, 4];
+---
+
+<section id="trajectory" class="sec traj" data-level="1.18" data-fx="0.3">
+  <div class="wrap">
+    <div class="col col--right">
+      <p class="label" data-reveal data-i18n="traj.label">{t('traj.label')}</p>
+      <h2 class="title title--md" data-reveal data-i18n="traj.title">{t('traj.title')}</h2>
+      <ol class="timeline">
+        {
+          steps.map((i) => (
+            <li class="tl" data-reveal>
+              <span class="tl__meta" data-i18n={`traj.${i}.meta`}>
+                {t(`traj.${i}.meta`)}
+              </span>
+              <div>
+                <h3 class="tl__title" data-i18n={`traj.${i}.title`}>
+                  {t(`traj.${i}.title`)}
+                </h3>
+                <p class="tl__text" data-i18n={`traj.${i}.text`}>
+                  {t(`traj.${i}.text`)}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>

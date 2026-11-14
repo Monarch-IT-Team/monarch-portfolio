@@ -1,0 +1,74 @@
+---
+// Still the universe, pulled back a little. Contacts.
+import { SITE } from '../../config';
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+const L = SITE.links;
+const endpoint: string = import.meta.env.PUBLIC_CONTACT_ENDPOINT || SITE.contactEndpoint;
+const rows = [
+  { key: 'sig.tg', href: L.telegram, value: L.telegramHandle, external: true },
+  { key: 'sig.mail', href: `mailto:${L.email}`, value: L.email, external: false },
+  { key: 'sig.gh', href: L.github, value: L.githubHandle, external: true },
+  { key: 'sig.li', href: L.linkedin, value: L.linkedinHandle, external: true },
+];
+---
+
+<section id="signal" class="sec signal" data-level="4.12" data-fx="0.5">
+  <div class="wrap">
+    <div class="col signal-col">
+      <p class="label" data-reveal data-i18n="sig.label">{t('sig.label')}</p>
+      <h2 class="title" data-reveal data-i18n="sig.title">{t('sig.title')}</h2>
+      <p class="body" data-reveal data-i18n="sig.intro">{t('sig.intro')}</p>
+      <div class="links">
+        {
+          rows.map((r) => (
+            <a
+              class="link-row"
+              href={r.href}
+              data-reveal
+              {...(r.external ? { target: '_blank', rel: 'noopener' } : {})}
+            >
+              <span class="link-row__label" data-i18n={r.key}>
+                {t(r.key)}
+              </span>
+              <span class="link-row__value">{r.value}</span>
+              <svg class="link-row__arrow" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M5 15 15 5M7 5h8v8" fill="none" stroke="currentColor" stroke-width="1.2" />
+              </svg>
+            </a>
+          ))
+        }
+      </div>
+
+      <form class="signal-form" id="signal-form" data-endpoint={endpoint} data-telegram={L.telegram} novalidate data-reveal>
+        <h3 class="signal-form__title" data-i18n="form.title">{t('form.title')}</h3>
+        <div class="signal-form__row">
+          <label class="field">
+            <span data-i18n="form.name">{t('form.name')}</span>
+            <input name="name" autocomplete="name" maxlength="100" />
+          </label>
+          <label class="field">
+            <span data-i18n="form.contact">{t('form.contact')}</span>
+            <input name="contact" autocomplete="email" maxlength="200" />
+          </label>
+        </div>
+        <label class="field">
+          <span data-i18n="form.message">{t('form.message')}</span>
+          <textarea name="message" rows="4" maxlength="3000" required></textarea>
+        </label>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="signal-form__foot">
+          <p class="signal-form__status" role="status" aria-live="polite"></p>
+          <button class="signal-form__send" type="submit">
+            <span data-i18n="form.send">{t('form.send')}</span>
+            <svg class="arrow" viewBox="0 0 10 10" aria-hidden="true">
+              <path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.1" />
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

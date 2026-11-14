@@ -1,0 +1,71 @@
+---
+// The Monexarch constellation: five stars forming an "M".
+// α (the brightest, with a sparkle) is the valley star in the middle.
+interface Props {
+  class?: string;
+  size?: number;
+  title?: string;
+  /** Embed inside another SVG instead of rendering a root <svg>. */
+  inner?: boolean;
+}
+const { class: cls, size = 32, title, inner = false } = Astro.props;
+
+const stars = [
+  { x: 7, y: 37, r: 1.7 },
+  { x: 12.5, y: 10.5, r: 2.1 },
+  { x: 24, y: 27, r: 2.5 },
+  { x: 35.5, y: 8.5, r: 2.2 },
+  { x: 41.5, y: 35, r: 1.6 },
+];
+// Lines stop short of every star, like on a star chart.
+const GAP = 3.6;
+const segments = stars.slice(1).map((b, i) => {
+  const a = stars[i];
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len = Math.hypot(dx, dy);
+  const ux = dx / len;
+  const uy = dy / len;
+  return {
+    x1: +(a.x + ux * GAP).toFixed(2),
+    y1: +(a.y + uy * GAP).toFixed(2),
+    x2: +(b.x - ux * GAP).toFixed(2),
+    y2: +(b.y - uy * GAP).toFixed(2),
+  };
+});
+const alpha = stars[2];
+const sparkle = `M${alpha.x} ${alpha.y - 6.4} L${alpha.x + 0.8} ${alpha.y - 0.8} L${alpha.x + 6.4} ${alpha.y} L${alpha.x + 0.8} ${alpha.y + 0.8} L${alpha.x} ${alpha.y + 6.4} L${alpha.x - 0.8} ${alpha.y + 0.8} L${alpha.x - 6.4} ${alpha.y} L${alpha.x - 0.8} ${alpha.y - 0.8} Z`;
+---
+
+{
+  inner ? (
+    <g>
+      {segments.map((s) => (
+        <line {...s} stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.6" />
+      ))}
+      <path d={sparkle} fill="currentColor" opacity="0.9" />
+      {stars.map((s) => (
+        <circle cx={s.x} cy={s.y} r={s.r} fill="currentColor" />
+      ))}
+    </g>
+  ) : (
+    <svg
+      class={cls}
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      fill="none"
+      role={title ? 'img' : undefined}
+      aria-hidden={title ? undefined : 'true'}
+    >
+      {title && <title>{title}</title>}
+      {segments.map((s) => (
+        <line {...s} stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity="0.6" />
+      ))}
+      <path d={sparkle} fill="currentColor" opacity="0.9" />
+      {stars.map((s) => (
+        <circle cx={s.x} cy={s.y} r={s.r} fill="currentColor" />
+      ))}
+    </svg>
+  )
+}

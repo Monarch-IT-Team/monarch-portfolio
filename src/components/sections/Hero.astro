@@ -1,0 +1,26 @@
+---
+// Scale 0 · the star. data-fx / data-fy = where the 3D focus sits on screen (0..1).
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+---
+
+<section id="hero" class="sec hero" data-level="0" data-fx="0.5" data-fy="0.4" data-fy-m="0.34">
+  <div class="wrap hero__inner">
+    <p class="eyebrow" data-hero data-i18n="hero.eyebrow">{t('hero.eyebrow')}</p>
+
+    <div class="hero__aside">
+      <p class="hero__lead" data-hero data-i18n="hero.lead">{t('hero.lead')}</p>
+      <a class="scroll-hint" href="#about" data-hero>
+        <span class="scroll-hint__line" aria-hidden="true"></span>
+        <span data-i18n="hero.scroll">{t('hero.scroll')}</span>
+      </a>
+    </div>
+
+    <h1 class="hero__name" aria-label="Muhammadamin Gulomov">
+      <span class="line" aria-hidden="true"><span class="line__inner">Muhammadamin</span></span>
+      <span class="line" aria-hidden="true"><span class="line__inner">Gulomov</span></span>
+    </h1>
+  </div>
+</section>

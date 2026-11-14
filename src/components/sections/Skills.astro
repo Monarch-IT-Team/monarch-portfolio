@@ -1,0 +1,35 @@
+---
+// Scale 2 · the stellar neighbourhood: each discipline is a named star (hover lights it up).
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+const skills = Array.from({ length: 10 }, (_, i) => i);
+---
+
+<section id="skills" class="sec skills-sec" data-level="2" data-fx="0.73">
+  <div class="wrap">
+    <div class="col skills-col">
+      <p class="label" data-reveal data-i18n="skills.label">{t('skills.label')}</p>
+      <h2 class="title title--md" data-reveal data-i18n="skills.title">{t('skills.title')}</h2>
+      <p class="body" data-reveal data-i18n="skills.intro">{t('skills.intro')}</p>
+      <ol class="skills">
+        {
+          skills.map((i) => (
+            <li class="skill" data-skill={i} data-reveal>
+              <span class="skill__num">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="skill__name" data-i18n={`skills.${i}.name`}>
+                  {t(`skills.${i}.name`)}
+                </h3>
+                <p class="skill__text" data-i18n={`skills.${i}.text`}>
+                  {t(`skills.${i}.text`)}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>

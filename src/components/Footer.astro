@@ -1,0 +1,25 @@
+---
+interface Props {
+  t: (key: string) => string;
+  terminal?: boolean;
+}
+const { t, terminal = true } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <a class="credit" href="https://shaha01.github.io/Shakhriyor/" target="_blank" rel="noopener">
+    <span class="credit__label" data-i18n="foot.credit">{t('foot.credit')}</span>
+    <span class="credit__name">Abrorov Shahriyor</span>
+    <span class="credit__stripes" aria-hidden="true"><i></i><i></i><i></i></span>
+  </a>
+  {
+    terminal && (
+      <button class="term-hint" type="button" data-terminal>
+        <kbd>~</kbd>
+        <span data-i18n="ui.terminal">{t('ui.terminal')}</span>
+      </button>
+    )
+  }
+  <span>© <span data-dyn="year">{year}</span> SHA · MONEXARCH</span>
+</footer>

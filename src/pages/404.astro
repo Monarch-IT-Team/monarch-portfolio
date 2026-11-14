@@ -1,0 +1,68 @@
+---
+// GitHub Pages serves this for any missing address.
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import Footer from '../components/Footer.astro';
+import I18n from '../components/I18n.astro';
+import { dict } from '../i18n/dict';
+import { starfield } from '../lib/starfield';
+import { SITE } from '../config';
+
+const t = (key: string) => dict.en[key] ?? key;
+---
+
+<Base title={`404 — ${t('nf.title')} · Monexarch`} description={t('nf.text')} intro={false} noindex>
+  <div class="scene-fallback nf-sky" aria-hidden="true" style={`--stars:${starfield(404)}`}></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="header">
+    <a class="brand" href={import.meta.env.BASE_URL} aria-label={t('ui.home')} data-i18n-attr="aria-label:ui.home">
+      <Logo class="brand__mark" size={30} />
+      <span class="brand__word">Monexarch</span>
+    </a>
+    <span></span>
+    <div class="controls">
+      <nav class="langs" aria-label={t('ui.lang')} data-i18n-attr="aria-label:ui.lang">
+        <button type="button" lang="uz" data-lang-btn="uz" aria-pressed="false">UZ</button>
+        <button type="button" lang="ru" data-lang-btn="ru" aria-pressed="false">RU</button>
+        <button type="button" lang="en" data-lang-btn="en" aria-pressed="true">EN</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="nf">
+    <div class="nf__inner">
+      <svg class="nf__mark" viewBox="0 0 48 48" aria-hidden="true">
+        <!-- the Monexarch constellation with its brightest star gone dark -->
+        <g stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.45">
+          <line x1="7.77" y1="33.28" x2="11.73" y2="14.22"></line>
+          <line x1="14.67" y1="13.62" x2="20.5" y2="21.9" stroke-dasharray="1 2"></line>
+          <line x1="27.2" y1="21.7" x2="33.49" y2="11.73" stroke-dasharray="1 2"></line>
+          <line x1="36.34" y1="12.21" x2="40.66" y2="31.29"></line>
+        </g>
+        <circle cx="7" cy="37" r="1.7" fill="currentColor"></circle>
+        <circle cx="12.5" cy="10.5" r="2.1" fill="currentColor"></circle>
+        <circle class="nf__lost" cx="24" cy="27" r="2.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.2 1.2"></circle>
+        <circle cx="35.5" cy="8.5" r="2.2" fill="currentColor"></circle>
+        <circle cx="41.5" cy="35" r="1.6" fill="currentColor"></circle>
+      </svg>
+      <p class="label nf__code">404</p>
+      <h1 class="nf__title" data-i18n="nf.title">{t('nf.title')}</h1>
+      <p class="body nf__text" data-i18n="nf.text">{t('nf.text')}</p>
+      <a class="nf__back" href={import.meta.env.BASE_URL}>
+        <span aria-hidden="true">←</span>
+        <span data-i18n="nf.back">{t('nf.back')}</span>
+      </a>
+    </div>
+  </main>
+
+  <Footer t={t} terminal={false} />
+
+  <I18n data={{ dict, since: SITE.codingSince, birth: SITE.birthDate }} />
+  <script>
+    import { initCursor } from '../scripts/cursor';
+    document.documentElement.classList.add('ready');
+    initCursor(matchMedia('(prefers-reduced-motion: reduce)').matches);
+  </script>
+</Base>

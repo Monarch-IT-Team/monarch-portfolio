@@ -1,0 +1,24 @@
+---
+// Scale 4 · the cosmic web; the gold "M" constellation is drawn as you arrive.
+import Logo from '../Logo.astro';
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+---
+
+<section id="monexarch" class="sec mx" data-level="4" data-fx="0.64">
+  <div class="wrap">
+    <div class="col mx-col">
+      <p class="label" data-reveal data-i18n="mx.label">{t('mx.label')}</p>
+      <h2 class="mx-title" data-reveal>Monexarch</h2>
+      <p class="mx-sub" data-reveal data-i18n="mx.sub">{t('mx.sub')}</p>
+      <p class="body" data-reveal data-i18n="mx.p1">{t('mx.p1')}</p>
+      <p class="body" data-reveal data-i18n="mx.p2">{t('mx.p2')}</p>
+      <p class="mx-caption" data-reveal>
+        <Logo size={28} />
+        <span data-i18n="mx.caption">{t('mx.caption')}</span>
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,86 @@
+---
+// A year of public GitHub activity: every day is a star, brighter = more commits.
+// Data: src/data/github.json (refreshed by scripts/fetch-projects.mjs).
+import gh from '../data/github.json';
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+
+type Day = [string, number, number, number, number]; // date, week, weekday, level, count
+const days = (gh.days ?? []) as Day[];
+const weeks = days.length ? Math.max(...days.map((d) => d[1])) + 1 : 0;
+const STEP = 11;
+const R = [1, 1.6, 2.1, 2.6, 3.2];
+const languages = (gh.languages ?? []) as { name: string; pct: number }[];
+---
+
+{
+  days.length > 0 && (
+    <div class="activity" data-reveal>
+      <div class="activity__head">
+        <p class="label" data-i18n="gh.label">
+          {t('gh.label')}
+        </p>
+        <span class="activity__note" data-i18n="gh.note">
+          {t('gh.note')}
+        </span>
+      </div>
+      <h3 class="activity__title" data-i18n="gh.title">
+        {t('gh.title')}
+      </h3>
+
+      <dl class="activity__stats">
+        <div>
+          <dt data-i18n="gh.contrib">{t('gh.contrib')}</dt>
+          <dd>{gh.contributions}</dd>
+        </div>
+        <div>
+          <dt data-i18n="gh.repos">{t('gh.repos')}</dt>
+          <dd>{gh.repos}</dd>
+        </div>
+        <div>
+          <dt data-i18n="gh.stars">{t('gh.stars')}</dt>
+          <dd>{gh.stars}</dd>
+        </div>
+      </dl>
+
+      <svg
+        class="sky"
+        viewBox={`0 0 ${weeks * STEP} ${7 * STEP}`}
+        role="img"
+        aria-label={`${gh.contributions} contributions`}
+      >
+        {days.map(([date, w, d, l, c]) => (
+          <circle class={`sky__d l${l}`} cx={w * STEP + STEP / 2} cy={d * STEP + STEP / 2} r={R[l]}>
+            <title>{`${date} · ${c}`}</title>
+          </circle>
+        ))}
+      </svg>
+      <p class="activity__hint" data-i18n="gh.hint">
+        {t('gh.hint')}
+      </p>
+
+      {languages.length > 0 && (
+        <div class="langbar">
+          <p class="langbar__label" data-i18n="gh.langs">
+            {t('gh.langs')}
+          </p>
+          <div class="langbar__bar" aria-hidden="true">
+            {languages.map((l, k) => (
+              <i style={`width:${l.pct}%`} class={`c${k}`} />
+            ))}
+          </div>
+          <ul class="langbar__legend">
+            {languages.map((l, k) => (
+              <li>
+                <i class={`c${k}`} />
+                {l.name} <span>{l.pct}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}

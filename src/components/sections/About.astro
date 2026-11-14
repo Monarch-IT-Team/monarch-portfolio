@@ -1,0 +1,54 @@
+---
+// Scale 1 · the system: one orbit for every year in code.
+import Avatar from '../Avatar.astro';
+import { SITE } from '../../config';
+interface Props {
+  t: (key: string) => string;
+  word: (n: number) => string;
+}
+const { t, word } = Astro.props;
+
+// Build-time defaults; the browser recomputes them so the page never goes stale.
+const now = new Date();
+const birth = new Date(SITE.birthDate);
+const age =
+  now.getFullYear() -
+  birth.getFullYear() -
+  (now.getMonth() < birth.getMonth() || (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate()) ? 1 : 0);
+const years = now.getFullYear() - SITE.codingSince;
+const w = word(years);
+const title = t('about.title').split('{W}').join(w.charAt(0).toUpperCase() + w.slice(1));
+---
+
+<section id="about" class="sec about" data-level="1" data-fx="0.7">
+  <div class="wrap">
+    <div class="col">
+      <div class="dossier" data-reveal>
+        <Avatar />
+        <div>
+          <p class="label" data-i18n="about.label">{t('about.label')}</p>
+          <span class="dossier__name">Muhammadamin Gulomov</span>
+        </div>
+      </div>
+
+      <h2 class="title" data-reveal data-dyn="aboutTitle">{title}</h2>
+      <p class="body" data-reveal data-i18n="about.body1">{t('about.body1')}</p>
+      <p class="body" data-reveal data-i18n="about.body2">{t('about.body2')}</p>
+
+      <dl class="stats" data-reveal>
+        <div>
+          <dt data-i18n="about.age">{t('about.age')}</dt>
+          <dd><b data-dyn="age">{age}</b><span data-dyn="ageUnit">{t('plural.age.other')}</span></dd>
+        </div>
+        <div>
+          <dt data-i18n="about.coding">{t('about.coding')}</dt>
+          <dd><b data-dyn="years">{years}</b><span data-dyn="yearsUnit">{t('plural.year.other')}</span></dd>
+        </div>
+        <div>
+          <dt data-i18n="about.disc">{t('about.disc')}</dt>
+          <dd><b>10</b></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>

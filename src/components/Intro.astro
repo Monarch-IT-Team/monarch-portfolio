@@ -1,0 +1,17 @@
+---
+// First-visit intro: a short kernel boot log, then the universe ignites.
+// Shown only once per browser (localStorage "mx-intro"); skipped with reduced motion.
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+---
+
+<div class="intro" id="intro">
+  <div class="intro__log" id="intro-log" aria-hidden="true"></div>
+  <div class="intro__bar" aria-hidden="true"><i></i></div>
+  <button class="intro__skip" id="intro-skip" type="button">
+    <span data-i18n="ui.skip">{t('ui.skip')}</span> ↵
+  </button>
+  <div class="intro__flash" aria-hidden="true"></div>
+</div>

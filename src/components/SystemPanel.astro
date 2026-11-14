@@ -1,0 +1,127 @@
+---
+// The "system" view of a project: the camera flies into its star, this panel slides in.
+import type { Project } from '../lib/projects';
+interface Props {
+  t: (key: string) => string;
+  projects: Project[];
+}
+const { t, projects } = Astro.props;
+const fmt = new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric' });
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<div class="system" id="system" hidden>
+  <div class="system__backdrop" data-system-close></div>
+  <div class="system__panel" role="dialog" aria-modal="true" aria-labelledby="system-title" tabindex="-1">
+    <button class="system__close" type="button" data-system-close aria-label={t('sys.close')} data-i18n-attr="aria-label:sys.close">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.2" fill="none"></path></svg>
+    </button>
+
+    {
+      projects.map((p, i) => (
+        <article class="system__item" data-system={i} hidden>
+          <p class="label">
+            <span data-i18n="sys.label">{t('sys.label')}</span> {pad(i + 1)}
+          </p>
+          <h2 class="system__title" id={`system-title-${i}`}>
+            {p.title}
+          </h2>
+          {p.desc.en && (
+            <p class="system__desc" data-i18n={`proj.${i}.desc`}>
+              {p.desc.en}
+            </p>
+          )}
+
+          {p.stack.length > 0 && (
+            <ul class="card__stack">
+              {p.stack.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          )}
+
+          {p.languages.length > 0 && (
+            <div class="langbar">
+              <p class="langbar__label" data-i18n="sys.langs">
+                {t('sys.langs')}
+              </p>
+              <div class="langbar__bar" aria-hidden="true">
+                {p.languages.map((l, k) => (
+                  <i style={`width:${l.pct}%`} class={`c${k}`} />
+                ))}
+              </div>
+              <ul class="langbar__legend">
+                {p.languages.map((l, k) => (
+                  <li>
+                    <i class={`c${k}`} />
+                    {l.name} <span>{l.pct}%</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <dl class="system__stats">
+            <div>
+              <dt data-i18n="sys.stars">{t('sys.stars')}</dt>
+              <dd>{p.stars}</dd>
+            </div>
+            <div>
+              <dt data-i18n="sys.forks">{t('sys.forks')}</dt>
+              <dd>{p.forks}</dd>
+            </div>
+            <div>
+              <dt data-i18n="sys.created">{t('sys.created')}</dt>
+              <dd>
+                <time datetime={p.createdAt} data-dyn="date" data-date={p.createdAt}>
+                  {fmt.format(new Date(p.createdAt))}
+                </time>
+              </dd>
+            </div>
+            <div>
+              <dt data-i18n="proj.updated">{t('proj.updated')}</dt>
+              <dd>
+                <time datetime={p.pushedAt} data-dyn="date" data-date={p.pushedAt}>
+                  {fmt.format(new Date(p.pushedAt))}
+                </time>
+              </dd>
+            </div>
+          </dl>
+
+          <div class="system__links">
+            <a class="system__btn" href={p.url} target="_blank" rel="noopener">
+              <span data-i18n="proj.code">{t('proj.code')}</span>
+              <svg class="arrow" viewBox="0 0 10 10" aria-hidden="true">
+                <path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.1" />
+              </svg>
+            </a>
+            {p.homepage && (
+              <a class="system__btn" href={p.homepage} target="_blank" rel="noopener">
+                <span data-i18n="proj.live">{t('proj.live')}</span>
+                <svg class="arrow" viewBox="0 0 10 10" aria-hidden="true">
+                  <path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.1" />
+                </svg>
+              </a>
+            )}
+          </div>
+        </article>
+      ))
+    }
+
+    {
+      projects.length > 1 && (
+        <nav class="system__nav">
+          <button type="button" data-system-step="-1">
+            ← <span data-i18n="sys.prev">{t('sys.prev')}</span>
+          </button>
+          <span class="system__count" aria-live="polite">
+            01 / {pad(projects.length)}
+          </span>
+          <button type="button" data-system-step="1">
+            <span data-i18n="sys.next">{t('sys.next')}</span> →
+          </button>
+        </nav>
+      )
+    }
+  </div>
+</div>

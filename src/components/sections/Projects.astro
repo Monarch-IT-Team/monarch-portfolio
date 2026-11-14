@@ -1,0 +1,91 @@
+---
+// Scale 3 · the galaxy: pinned GitHub repositories are the gold systems on its arms.
+import type { Project } from '../../lib/projects';
+import { SITE } from '../../config';
+import Activity from '../Activity.astro';
+interface Props {
+  t: (key: string) => string;
+  projects: Project[];
+}
+const { t, projects } = Astro.props;
+const fmt = new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric' });
+---
+
+<section id="projects" class="sec projects" data-level="3" data-fx="0.3">
+  <div class="wrap">
+    <div class="col col--right projects-col">
+      <p class="label" data-reveal data-i18n="proj.label">{t('proj.label')}</p>
+      <h2 class="title title--md" data-reveal data-i18n="proj.title">{t('proj.title')}</h2>
+      <p class="body" data-reveal data-i18n="proj.intro">{t('proj.intro')}</p>
+
+      {
+        projects.length ? (
+          <div class="cards">
+            {projects.map((p, i) => (
+              <article class="card" data-project={i} data-title={p.title} data-reveal>
+                <header class="card__head">
+                  <span class="card__idx">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 class="card__title">
+                    <button class="card__open" type="button" data-open-project={i} aria-haspopup="dialog">
+                      {p.title}
+                    </button>
+                  </h3>
+                  {p.stars > 0 && <span class="card__stars">★ {p.stars}</span>}
+                </header>
+                {p.desc.en && (
+                  <p class="card__desc" data-i18n={`proj.${i}.desc`}>
+                    {p.desc.en}
+                  </p>
+                )}
+                {p.stack.length > 0 && (
+                  <ul class="card__stack">
+                    {p.stack.map((s) => (
+                      <li>{s}</li>
+                    ))}
+                  </ul>
+                )}
+                <footer class="card__foot">
+                  <span>
+                    <span data-i18n="proj.updated">{t('proj.updated')}</span>{' '}
+                    <time datetime={p.pushedAt} data-dyn="date" data-date={p.pushedAt}>
+                      {fmt.format(new Date(p.pushedAt))}
+                    </time>
+                  </span>
+                  <span class="card__links">
+                    {p.homepage && (
+                      <a href={p.homepage} target="_blank" rel="noopener">
+                        <span data-i18n="proj.live">{t('proj.live')}</span>
+                        <svg class="arrow" viewBox="0 0 10 10" aria-hidden="true">
+                          <path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.1" />
+                        </svg>
+                      </a>
+                    )}
+                    <a href={p.url} target="_blank" rel="noopener">
+                      <span data-i18n="proj.code">{t('proj.code')}</span>
+                      <svg class="arrow" viewBox="0 0 10 10" aria-hidden="true">
+                        <path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.1" />
+                      </svg>
+                    </a>
+                  </span>
+                </footer>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p class="empty" data-i18n="proj.empty">
+            {t('proj.empty')}
+          </p>
+        )
+      }
+
+      <Activity t={t} />
+
+      <a class="more" href={`https://github.com/${SITE.githubUser}?tab=repositories`} target="_blank" rel="noopener" data-reveal>
+        <span data-i18n="proj.all">{t('proj.all')}</span>
+        <svg class="arrow" viewBox="0 0 10 10" aria-hidden="true">
+          <path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.1" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
