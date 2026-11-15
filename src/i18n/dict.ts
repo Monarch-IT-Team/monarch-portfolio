@@ -107,7 +107,7 @@ const ru: Dict = {
   'sig.gh': 'GitHub',
   'sig.li': 'LinkedIn',
 
-  'foot.credit': 'Дизайн и разработка',
+  'foot.credit': 'Designer:',
 
   'ui.sound': 'Звук',
   'ui.lite': '3D-сцена',
@@ -284,7 +284,7 @@ const en: Dict = {
   'sig.gh': 'GitHub',
   'sig.li': 'LinkedIn',
 
-  'foot.credit': 'Design & development',
+  'foot.credit': 'Designer:',
 
   'ui.sound': 'Sound',
   'ui.lite': '3D scene',
@@ -457,7 +457,7 @@ const uz: Dict = {
   'sig.gh': 'GitHub',
   'sig.li': 'LinkedIn',
 
-  'foot.credit': 'Dizayn va dasturlash',
+  'foot.credit': 'Designer:',
 
   'ui.sound': 'Ovoz',
   'ui.lite': '3D sahna',
