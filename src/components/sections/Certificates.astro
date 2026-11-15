@@ -1,0 +1,95 @@
+---
+// Clean Glassmorphism Certificates Carousel — ONLY professional online courses (no achievement cards, no outer boxes).
+import { SITE } from '../../config';
+import certs from '../../data/coursera-certs.json';
+
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/[/]$/, '');
+---
+
+<section id="certificates" class="sec cert-sec" data-level="2.2" data-fx="0.5">
+  <div class="wrap cert-wide" data-reveal>
+    <div class="cert-wide__top">
+      <div>
+        <p class="label" data-i18n="certs.label">{t('certs.label')}</p>
+        <h2 class="cert-wide__title" data-i18n="certs.title">{t('certs.title')}</h2>
+      </div>
+      <div class="cert-controls">
+        <a class="cert-link-all" href={SITE.links.linkedinCerts} target="_blank" rel="noopener" data-i18n="certs.linkedin">{t('certs.linkedin')}</a>
+        <button type="button" class="cert-nav" id="certPrev" aria-label={t('certs.prev')} data-i18n-attr="aria-label:certs.prev">←</button>
+        <button type="button" class="cert-nav" id="certNext" aria-label={t('certs.next')} data-i18n-attr="aria-label:certs.next">→</button>
+      </div>
+    </div>
+
+    <div
+      class="cert-glass-track"
+      id="certTrack"
+      oncontextmenu="return false;"
+      ondragstart="return false;"
+    >
+      {
+        certs.map((c) => (
+          <a
+            class="cert-frame"
+            href={c.href}
+            target="_blank"
+            rel="noopener"
+            draggable="false"
+            oncontextmenu="return false;"
+            title={`${c.title} — ${c.issuer}`}
+          >
+            {c.img ? (
+              <img src={c.isLocal ? `${base}${c.img}` : c.img} alt={c.title} loading="lazy" draggable="false" />
+            ) : (
+              <div class="cert-sheet">
+                <div class="cert-sheet__ribbon">COURSE CERTIFICATE</div>
+                <div class="cert-sheet__org">{c.issuer}</div>
+                <div class="cert-sheet__label">This certifies that</div>
+                <div class="cert-sheet__name">Ğulomov Muhammadamin</div>
+                <div class="cert-sheet__title">{c.title}</div>
+                <div class="cert-sheet__foot">
+                  <span>{c.date}</span>
+                  <span>Verify ↗</span>
+                </div>
+              </div>
+            )}
+            <div class="cert-frame__wm" aria-hidden="true">Ğulomov M. · Protected</div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const certTrack = document.getElementById('certTrack');
+  const certPrev = document.getElementById('certPrev');
+  const certNext = document.getElementById('certNext');
+  if (certTrack) {
+    const step = 340;
+    certPrev?.addEventListener('click', () => {
+      certTrack.scrollBy({ left: -step, behavior: 'smooth' });
+    });
+    certNext?.addEventListener('click', () => {
+      if (certTrack.scrollLeft + certTrack.clientWidth >= certTrack.scrollWidth - 12) {
+        certTrack.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        certTrack.scrollBy({ left: step, behavior: 'smooth' });
+      }
+    });
+    let paused = false;
+    certTrack.addEventListener('mouseenter', () => { paused = true; });
+    certTrack.addEventListener('mouseleave', () => { paused = false; });
+    setInterval(() => {
+      if (paused) return;
+      if (certTrack.scrollLeft + certTrack.clientWidth >= certTrack.scrollWidth - 12) {
+        certTrack.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        certTrack.scrollBy({ left: step, behavior: 'smooth' });
+      }
+    }, 3800);
+  }
+</script>

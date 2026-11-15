@@ -4,6 +4,9 @@ import { createScene, type SceneHandle } from './scene';
 import { initCursor } from './cursor';
 import { Ambient } from './sound';
 import { initTerminal } from './terminal';
+import { createBlackHole, type BlackHoleHandle } from './blackhole';
+import { initTextPhysics } from './physics';
+import { initStarPortrait } from './starportrait';
 import { SITE } from '../config';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -45,8 +48,8 @@ const store = {
 
 console.log(
   '%c✦ Monexarch%c\nPress ~ to open the kernel terminal.',
-  'font: 600 16px Jost, sans-serif; color: #e2c07c; letter-spacing: .2em',
-  'font: 12px monospace; color: #bab5ab',
+  'font: 600 16px Jost, sans-serif; color: #b57bff; letter-spacing: .2em',
+  'font: 12px monospace; color: #bdb6d4',
 );
 
 /* ------------------------------------------------------- scroll → scale */
@@ -175,6 +178,15 @@ function initScene() {
   if (!root.classList.contains('mx-intro')) igniteStar(false);
 }
 
+let blackHole: BlackHoleHandle | null = null;
+const bhCanvas = $<HTMLCanvasElement>('#bh');
+const bhSection = $('#about');
+if (bhCanvas && bhSection) {
+  blackHole = createBlackHole(bhCanvas, bhSection, reduced);
+  if (!blackHole) bhCanvas.remove();
+  else if (!three) blackHole.setEnabled(false);
+}
+
 measure();
 onFrame(sample(scrollY).level);
 
@@ -251,6 +263,7 @@ if (store.get('mx-sound') === '1') {
 function setThree(on: boolean) {
   if (root.classList.contains('no-webgl')) return false;
   three = on;
+  blackHole?.setEnabled(on);
   root.classList.toggle('mx-lite', !on);
   threeBtn?.setAttribute('aria-pressed', String(on));
   store.set('mx-lite', on ? '0' : '1');
@@ -464,6 +477,8 @@ function splitChars(el: HTMLElement) {
 
 const name = $('.hero__name');
 $$<HTMLElement>('.hero__name .line__inner').forEach(splitChars);
+initTextPhysics(blackHole?.state ?? null, reduced);
+initStarPortrait($<HTMLCanvasElement>('#heroStars'), reduced);
 
 let heroShown = false;
 function revealHero(delay = 0) {
@@ -473,10 +488,11 @@ function revealHero(delay = 0) {
   if (name) name.style.visibility = 'visible';
   if (reduced) {
     gsap.set('[data-hero]', { opacity: 1, y: 0 });
+    root.classList.add('hero-live');
     return;
   }
   gsap
-    .timeline({ delay })
+    .timeline({ delay, onComplete: () => root.classList.add('hero-live') })
     .fromTo(chars, { yPercent: 115, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.4, ease: 'expo.out', stagger: 0.03 }, 0)
     .to('[data-hero]', { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.1 }, 0.4);
 }

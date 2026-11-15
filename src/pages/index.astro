@@ -8,6 +8,8 @@ import Hero from '../components/sections/Hero.astro';
 import About from '../components/sections/About.astro';
 import Trajectory from '../components/sections/Trajectory.astro';
 import Skills from '../components/sections/Skills.astro';
+import Certificates from '../components/sections/Certificates.astro';
+import Preview from '../components/sections/Preview.astro';
 import Projects from '../components/sections/Projects.astro';
 import Monexarch from '../components/sections/Monexarch.astro';
 import Signal from '../components/sections/Signal.astro';
@@ -31,6 +33,7 @@ const word = (n: number) => full.en[`num.${n}`] ?? String(n);
 <Base title={t('meta.title')} description={t('meta.desc')}>
   <Intro t={t} />
   <canvas id="scene" aria-hidden="true"></canvas>
+  <canvas id="bh" aria-hidden="true"></canvas>
   <div class="scene-fallback" aria-hidden="true" style={`--stars:${starfield()}`}></div>
   <div class="vignette" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
@@ -43,6 +46,8 @@ const word = (n: number) => full.en[`num.${n}`] ?? String(n);
     <About t={t} word={word} />
     <Trajectory t={t} />
     <Skills t={t} />
+    <Certificates t={t} />
+    <Preview t={t} />
     <Projects t={t} projects={projects} />
     <Monexarch t={t} />
     <Signal t={t} />

@@ -191,11 +191,14 @@ export function createScene(o: SceneOptions): SceneHandle {
       focus.lerp(marker, fe);
     }
 
+    const bhEl = document.getElementById('bh');
+    const bhVis = bhEl ? Math.min(1, (parseFloat(bhEl.dataset.vis || '0') || 0) * 1.65) : 0;
     levels.forEach((l, i) => {
       l.group.position.copy(pos[i]).sub(focus);
       l.group.scale.setScalar(scales[i]);
       l.group.quaternion.copy(l.quat);
-      const op = levelOpacity(i, p);
+      let op = levelOpacity(i, p);
+      if (i === 1) op *= Math.max(0, 1 - bhVis);
       opac[i] = op;
       l.group.visible = op > 0.003;
       if (l.group.visible) l.setOpacity(op);

@@ -7,20 +7,56 @@ const { t } = Astro.props;
 ---
 
 <section id="hero" class="sec hero" data-level="0" data-fx="0.5" data-fy="0.4" data-fy-m="0.34">
+  <div class="hero-portrait" id="heroPortrait" aria-hidden="true">
+    <img class="hero-portrait__glow" src={`${import.meta.env.BASE_URL.replace(/[/]$/, '')}/photo/me.jpg`} alt="" loading="eager" decoding="async" />
+    <img class="hero-portrait__img" src={`${import.meta.env.BASE_URL.replace(/[/]$/, '')}/photo/me.jpg`} alt="Muhammadamin Ğulomov" loading="eager" decoding="async" />
+    <span class="hero-portrait__otw-side">#OPENTOWORK</span>
+  </div>
   <div class="wrap hero__inner">
     <p class="eyebrow" data-hero data-i18n="hero.eyebrow">{t('hero.eyebrow')}</p>
 
     <div class="hero__aside">
       <p class="hero__lead" data-hero data-i18n="hero.lead">{t('hero.lead')}</p>
-      <a class="scroll-hint" href="#about" data-hero>
-        <span class="scroll-hint__line" aria-hidden="true"></span>
-        <span data-i18n="hero.scroll">{t('hero.scroll')}</span>
-      </a>
+      <div class="hero-actions" data-hero>
+        <a class="scroll-hint" href="#about">
+          <span class="scroll-hint__line" aria-hidden="true"></span>
+          <span data-i18n="hero.scroll">{t('hero.scroll')}</span>
+        </a>
+        <a
+          class="cv-btn"
+          href={`${import.meta.env.BASE_URL.replace(/[/]$/, '')}/cv/Muhammadamin_Gulomov_CV.pdf`}
+          download="Muhammadamin_Gulomov_CV.pdf"
+          target="_blank"
+          rel="noopener"
+          data-i18n="hero.cv"
+        >
+          {t('hero.cv')}
+        </a>
+      </div>
     </div>
 
-    <h1 class="hero__name" aria-label="Muhammadamin Gulomov">
+    <h1 class="hero__name" data-gravity aria-label="Muhammadamin Ğulomov">
       <span class="line" aria-hidden="true"><span class="line__inner">Muhammadamin</span></span>
-      <span class="line" aria-hidden="true"><span class="line__inner">Gulomov</span></span>
+      <span class="line" aria-hidden="true"><span class="line__inner">Ğulomov</span></span>
     </h1>
   </div>
+
+  <dl class="hero-strip" data-hero>
+    <div>
+      <dt data-i18n="about.age">{t('about.age')}</dt>
+      <dd><b data-dyn="age">18</b> <span data-dyn="ageUnit"></span></dd>
+    </div>
+    <div>
+      <dt data-i18n="about.coding">{t('about.coding')}</dt>
+      <dd><b data-dyn="years">8</b> <span data-dyn="yearsUnit"></span></dd>
+    </div>
+    <div>
+      <dt data-i18n="hero.uni">{t('hero.uni')}</dt>
+      <dd><b>TDIU</b> <span>AT-31/25r</span></dd>
+    </div>
+    <div>
+      <dt data-i18n="hero.focus">{t('hero.focus')}</dt>
+      <dd data-i18n="hero.focus.v">{t('hero.focus.v')}</dd>
+    </div>
+  </dl>
 </section>

@@ -1,14 +1,16 @@
 // Main site settings. Everything personal lives here.
 
 export const SITE = {
-  name: 'Muhammadamin Gulomov',
+  name: 'Muhammadamin Ğulomov',
   brand: 'Monexarch',
   url: 'https://monarch-it.github.io',
   githubUser: 'Monarch-IT',
 
   // Used to compute age and "years in code" in the browser, so the site never goes stale.
   birthDate: '2008-03-28',
-  codingSince: 2017,
+  codingSince: 2018,
+  phone: '+998 (94) 638-01-63',
+  cvFile: '/cv/Muhammadamin_Gulomov_CV.pdf',
 
   // Google Analytics 4 measurement ID, e.g. 'G-ABC123XYZ9'.
   // Empty string = analytics disabled. Can also be set with the PUBLIC_GA_ID env variable.
@@ -28,5 +30,6 @@ export const SITE = {
     githubHandle: 'Monarch-IT',
     linkedin: 'https://www.linkedin.com/in/muhammadamin-gulomov',
     linkedinHandle: 'muhammadamin-gulomov',
+    linkedinCerts: 'https://www.linkedin.com/in/muhammadamin-gulomov/details/certifications/',
   },
 } as const;

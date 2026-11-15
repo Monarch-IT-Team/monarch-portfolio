@@ -27,7 +27,7 @@ const title = t('about.title').split('{W}').join(w.charAt(0).toUpperCase() + w.s
         <Avatar />
         <div>
           <p class="label" data-i18n="about.label">{t('about.label')}</p>
-          <span class="dossier__name">Muhammadamin Gulomov</span>
+          <span class="dossier__name">Ğulomov Muhammadamin</span>
         </div>
       </div>
 
@@ -48,7 +48,34 @@ const title = t('about.title').split('{W}').join(w.charAt(0).toUpperCase() + w.s
           <dt data-i18n="about.disc">{t('about.disc')}</dt>
           <dd><b>10</b></dd>
         </div>
+        <div>
+          <dt data-i18n="about.certs">{t('about.certs')}</dt>
+          <dd><b>27</b><span data-i18n="about.certs.paid">{t('about.certs.paid')}</span></dd>
+        </div>
       </dl>
+
+      <div class="ach-grid" data-reveal>
+        <div class="ach-card">
+          <span class="ach-card__tag" data-i18n="ach.0.tag">{t('ach.0.tag')}</span>
+          <strong class="ach-card__val" data-i18n="ach.0.val">{t('ach.0.val')}</strong>
+          <span class="ach-card__sub" data-i18n="ach.0.sub">{t('ach.0.sub')}</span>
+        </div>
+        <div class="ach-card">
+          <span class="ach-card__tag" data-i18n="ach.1.tag">{t('ach.1.tag')}</span>
+          <strong class="ach-card__val" data-i18n="ach.1.val">{t('ach.1.val')}</strong>
+          <span class="ach-card__sub" data-i18n="ach.1.sub">{t('ach.1.sub')}</span>
+        </div>
+        <div class="ach-card">
+          <span class="ach-card__tag" data-i18n="ach.2.tag">{t('ach.2.tag')}</span>
+          <strong class="ach-card__val" data-i18n="ach.2.val">{t('ach.2.val')}</strong>
+          <span class="ach-card__sub" data-i18n="ach.2.sub">{t('ach.2.sub')}</span>
+        </div>
+        <div class="ach-card">
+          <span class="ach-card__tag" data-i18n="ach.3.tag">{t('ach.3.tag')}</span>
+          <strong class="ach-card__val" data-i18n="ach.3.val">{t('ach.3.val')}</strong>
+          <span class="ach-card__sub" data-i18n="ach.3.sub">{t('ach.3.sub')}</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>

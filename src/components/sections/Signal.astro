@@ -10,6 +10,7 @@ const endpoint: string = import.meta.env.PUBLIC_CONTACT_ENDPOINT || SITE.contact
 const rows = [
   { key: 'sig.tg', href: L.telegram, value: L.telegramHandle, external: true },
   { key: 'sig.mail', href: `mailto:${L.email}`, value: L.email, external: false },
+  { key: 'sig.phone', href: 'tel:+998946380163', value: SITE.phone, external: false },
   { key: 'sig.gh', href: L.github, value: L.githubHandle, external: true },
   { key: 'sig.li', href: L.linkedin, value: L.linkedinHandle, external: true },
 ];
@@ -30,8 +31,8 @@ const rows = [
               data-reveal
               {...(r.external ? { target: '_blank', rel: 'noopener' } : {})}
             >
-              <span class="link-row__label" data-i18n={r.key}>
-                {t(r.key)}
+              <span class="link-row__label" {...('label' in r && r.label ? {} : { 'data-i18n': r.key })}>
+                {'label' in r && r.label ? r.label : t(r.key)}
               </span>
               <span class="link-row__value">{r.value}</span>
               <svg class="link-row__arrow" viewBox="0 0 20 20" aria-hidden="true">
@@ -40,6 +41,19 @@ const rows = [
             </a>
           ))
         }
+      </div>
+
+      <div style="margin-top:16px;" data-reveal>
+        <a
+          class="cv-btn"
+          href={`${import.meta.env.BASE_URL.replace(/[/]$/, '')}/cv/Muhammadamin_Gulomov_CV.pdf`}
+          download="Muhammadamin_Gulomov_CV.pdf"
+          target="_blank"
+          rel="noopener"
+          data-i18n="sig.cv"
+        >
+          {t('sig.cv')}
+        </a>
       </div>
 
       <form class="signal-form" id="signal-form" data-endpoint={endpoint} data-telegram={L.telegram} novalidate data-reveal>

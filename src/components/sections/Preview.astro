@@ -1,0 +1,169 @@
+---
+// Scale 2.5 · app preview: MoDOTS real-app MP4 showcase with interactive chapter pills.
+interface Props {
+  t: (key: string) => string;
+}
+const { t } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/[/]$/, '');
+const chapters = [
+  { t: 0.0, tag: '01 · Хранилище', title: 'MoDOTS · 2.07 MB → 29.3 KB (98.6% экономии)' },
+  { t: 4.8, tag: '02 · Тест сжатия', title: 'Тестирование кодека сжатия MoDOTS-Ω' },
+  { t: 6.15, tag: '03 · Аудит', title: 'Аппаратный аудит накопителя, HWID и WAL/CAS' },
+  { t: 7.6, tag: '04 · SNQL IDE', title: 'Spatial-Node Query Language · TRAVERSE NODES' },
+  { t: 10.2, tag: '05 · Sovereign AI', title: 'Суверенный AI-Аналитик (.modots_vault + CV/OCR)' },
+  { t: 12.3, tag: '06 · Ответ ИИ', title: 'Ответ строго по документам без галлюцинаций' },
+];
+---
+
+<section id="app" class="sec app" data-level="2.5" data-fx="0.2">
+  <div class="wrap app__grid">
+    <div class="col app__col">
+      <p class="label" data-reveal data-i18n="app.label">{t('app.label')}</p>
+      <h2 class="title" data-reveal>MoDOTS</h2>
+      <p class="app__sub" data-reveal data-i18n="app.sub">{t('app.sub')}</p>
+      <p class="body" data-reveal data-i18n="app.p1">{t('app.p1')}</p>
+      <p class="body" data-reveal data-i18n="app.p2">{t('app.p2')}</p>
+      <p class="app__stat" data-reveal>
+        <b>2.07 MB <i>→</i> 29.3 KB</b>
+        <span data-i18n="app.stat">{t('app.stat')}</span>
+      </p>
+    </div>
+
+    <div class="app__shot md-reel" id="mdReel" data-reveal>
+      <div class="app__bar md-bar">
+        <div class="md-dots"><i></i><i></i><i></i></div>
+        <span class="md-title" id="mdReelTitle">{chapters[0].title}</span>
+        <div class="md-mode-switch" role="group" aria-label="Video mode">
+          <button type="button" class="md-mode-btn is-active" id="mdModeShort" data-mode="short" data-i18n="app.modeShort">{t('app.modeShort')}</button>
+          <button type="button" class="md-mode-btn" id="mdModeFull" data-mode="full" data-i18n="app.modeFull">{t('app.modeFull')}</button>
+        </div>
+        <button type="button" class="md-replay" id="mdReelToggle" title="Play / Pause" data-i18n="app.reelAuto">{t('app.reelAuto')}</button>
+      </div>
+
+      <div class="md-viewport">
+        <video
+          id="mdVideo"
+          class="md-frame is-active"
+          src={`${base}/video/modots-demo.mp4`}
+          data-short-src={`${base}/video/modots-demo.mp4`}
+          data-full-src={`${base}/video/modots-overview.mp4`}
+          poster={`${base}/photo/modots/main.png`}
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="metadata"
+        ></video>
+        <div class="md-timeline" aria-hidden="true"><i id="mdTimeBar"></i></div>
+      </div>
+
+      <div class="md-scenes" role="tablist" aria-label="Разделы видео MoDOTS">
+        {chapters.map((c, idx) => (
+          <button type="button" class={`md-sc ${idx === 0 ? 'is-active' : ''}`} data-md-time={c.t} data-md-idx={idx}>
+            {c.tag}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const video = document.getElementById('mdVideo') as HTMLVideoElement | null;
+  const titleEl = document.getElementById('mdReelTitle');
+  const toggleBtn = document.getElementById('mdReelToggle');
+  const barEl = document.getElementById('mdTimeBar');
+  const reel = document.getElementById('mdReel');
+
+  if (video && titleEl && barEl && reel) {
+    const CHAPTERS = [
+      { t: 0.0, title: 'MoDOTS · 2.07 MB → 29.3 KB (98.6% экономии)' },
+      { t: 4.8, title: 'Тестирование кодека сжатия MoDOTS-Ω' },
+      { t: 6.15, title: 'Аппаратный аудит накопителя, HWID и WAL/CAS' },
+      { t: 7.6, title: 'Spatial-Node Query Language · TRAVERSE NODES' },
+      { t: 10.2, title: 'Суверенный AI-Аналитик (.modots_vault + CV/OCR)' },
+      { t: 12.3, title: 'Ответ строго по документам без галлюцинаций' },
+    ];
+    const pills = Array.from(reel.querySelectorAll<HTMLButtonElement>('[data-md-idx]'));
+    const btnShort = document.getElementById('mdModeShort');
+    const btnFull = document.getElementById('mdModeFull');
+    const scenesBar = reel.querySelector<HTMLElement>('.md-scenes');
+    let currentMode: 'short' | 'full' = 'short';
+
+    function setVideoMode(mode: 'short' | 'full') {
+      if (!video || currentMode === mode) return;
+      currentMode = mode;
+      btnShort?.classList.toggle('is-active', mode === 'short');
+      btnFull?.classList.toggle('is-active', mode === 'full');
+      if (mode === 'full') {
+        video.src = video.dataset.fullSrc || video.src;
+        video.muted = false;
+        video.loop = false;
+        video.controls = true;
+        if (titleEl) titleEl.textContent = 'MoDOTS · Полный видеообзор идеи (3:00 со звуком)';
+        if (scenesBar) scenesBar.style.display = 'none';
+        video.play().catch(() => {});
+        if (toggleBtn) toggleBtn.textContent = '❚❚ Пауза';
+      } else {
+        video.src = video.dataset.shortSrc || video.src;
+        video.muted = true;
+        video.loop = true;
+        video.controls = false;
+        if (scenesBar) scenesBar.style.display = '';
+        if (titleEl) titleEl.textContent = CHAPTERS[0].title;
+        video.play().catch(() => {});
+        if (toggleBtn) toggleBtn.textContent = '❚❚ Авто';
+      }
+    }
+
+    btnShort?.addEventListener('click', () => setVideoMode('short'));
+    btnFull?.addEventListener('click', () => setVideoMode('full'));
+
+    video.addEventListener('timeupdate', () => {
+      const ct = video.currentTime;
+      const dur = video.duration || (currentMode === 'full' ? 180.0 : 16.0);
+      barEl.style.width = `${Math.min(100, (ct / dur) * 100)}%`;
+      if (currentMode === 'short') {
+        let active = 0;
+        for (let i = CHAPTERS.length - 1; i >= 0; i--) {
+          if (ct >= CHAPTERS[i].t) {
+            active = i;
+            break;
+          }
+        }
+        titleEl.textContent = CHAPTERS[active].title;
+        pills.forEach((p, i) => p.classList.toggle('is-active', i === active));
+      }
+    });
+
+    pills.forEach((p) => {
+      p.addEventListener('click', () => {
+        const t = Number(p.dataset.mdTime || 0);
+        video.currentTime = t;
+        video.play().catch(() => {});
+        if (toggleBtn) toggleBtn.textContent = '❚❚ Авто';
+      });
+    });
+
+    toggleBtn?.addEventListener('click', () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+        toggleBtn.textContent = '❚❚ Авто';
+      } else {
+        video.pause();
+        toggleBtn.textContent = '▶ Пуск';
+      }
+    });
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) video.play().catch(() => {});
+          else video.pause();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(reel);
+  }
+</script>

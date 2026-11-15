@@ -13,7 +13,7 @@ function rng(seed: number) {
 
 export function starfield(seed = 2017, size = 720, count = 240) {
   const r = rng(seed);
-  const colors = ['#ffffff', '#fff1dc', '#cfdcff', '#ffd2a1', '#9fb6ff'];
+  const colors = ['#ffffff', '#f2f7ff', '#6fa8ff', '#ff4d7a', '#8fd0ff'];
   let dots = '';
   for (let i = 0; i < count; i++) {
     const x = (r() * size).toFixed(1);

@@ -38,11 +38,11 @@ export interface Level {
 
 const STELLAR: [number, number][] = [
   [0xffffff, 5],
-  [0xfff1dc, 4],
-  [0xcfdcff, 3],
-  [0xffd2a1, 2],
-  [0x9fb6ff, 1.2],
-  [0xffa985, 0.8],
+  [0xf2f7ff, 4],
+  [0x6fa8ff, 3],
+  [0xff4d7a, 2.5],
+  [0x8fd0ff, 1.5],
+  [0xff2d55, 1.2],
 ];
 
 /** Shared "highlight" behaviour: uHi = index, uHiAmt eases in and out. */
@@ -84,7 +84,7 @@ export function buildBackground(r: Rand, low: boolean) {
   for (let i = 0; i < m; i++) {
     unitVector(r, v).multiplyScalar(48 + r() * 26);
     g.pos.set([v.x, v.y, v.z], i * 3);
-    writeColor(g.color, i, weighted(r, [[0xd9c7ff, 2], [0xffe0bd, 2], [0xbcd0ff, 2]]), 0.25 + 0.3 * r());
+    writeColor(g.color, i, weighted(r, [[0xd9c7ff, 2], [0xffb3d1, 2], [0xbcd0ff, 2]]), 0.25 + 0.3 * r());
     g.size[i] = 9 + 11 * r();
     g.seed[i] = r();
   }
@@ -156,7 +156,7 @@ export function buildSystem(r: Rand, low: boolean, years: number): Level {
   const omega = radii.map((rad) => 0.2 * Math.pow(rad, -1.5));
   for (let i = 0; i < n; i++) {
     const milestone = i === 0 || i === n - 1;
-    writeColor(pb.color, i, milestone ? 0xf6d595 : weighted(r, [[0xdfe6ff, 2], [0xa9bcff, 1], [0xffe2c4, 1]]));
+    writeColor(pb.color, i, milestone ? 0xf6d595 : weighted(r, [[0xdfe6ff, 2], [0xa9bcff, 1], [0xffc4dc, 1]]));
     pb.size[i] = milestone ? 8 : 4.6 + r() * 1.6;
     pb.seed[i] = r();
   }
@@ -172,7 +172,7 @@ export function buildSystem(r: Rand, low: boolean, years: number): Level {
     const rad = 0.35 + 3.6 * Math.pow(r(), 0.8);
     const a = r() * Math.PI * 2;
     d.pos.set([Math.cos(a) * rad, gauss(r) * 0.035 * (1 + rad * 0.2), Math.sin(a) * rad], i * 3);
-    writeColor(d.color, i, weighted(r, [[0xbfc8ff, 3], [0xffe7c9, 2], [0x8fa0ff, 1]]), 0.5);
+    writeColor(d.color, i, weighted(r, [[0xbfc8ff, 3], [0xffc4dc, 2], [0x8fa0ff, 1]]), 0.5);
     d.size[i] = 1.2 + Math.pow(r(), 3) * 2.2;
     d.seed[i] = r();
   }
@@ -287,7 +287,7 @@ export function buildGalaxy(r: Rand, low: boolean, projects: string[]): Level {
   const B = 0.42; // log-spiral pitch: θ = ln(r / R0) / B
   const armAngle = (rad: number, arm: number) => arm * Math.PI + Math.log(rad / R0) / B;
 
-  const warm = new THREE.Color(0xffdcaa);
+  const warm = new THREE.Color(0xffc2dc);
   const white = new THREE.Color(0xf3f0ff);
   const blue = new THREE.Color(0x8faaff);
   const c = new THREE.Color();
@@ -306,7 +306,7 @@ export function buildGalaxy(r: Rand, low: boolean, projects: string[]): Level {
       y = gauss(r) * 0.16 * Math.max(0.2, 1 - rad / 1.2);
       x = Math.cos(a) * rad;
       z = Math.sin(a) * rad;
-      writeColor(b.color, i, weighted(r, [[0xffe2b0, 3], [0xfff1dc, 2], [0xffc98a, 1]]), 0.34 + 0.2 * r());
+      writeColor(b.color, i, weighted(r, [[0xff9ec4, 3], [0xf2f7ff, 2], [0xff5c8a, 1]]), 0.34 + 0.2 * r());
       b.size[i] = 1.6 + 2.4 * Math.pow(r(), 3);
     } else if (kind < 0.37) {
       // diffuse disk between the arms
@@ -342,7 +342,7 @@ export function buildGalaxy(r: Rand, low: boolean, projects: string[]): Level {
   const diskMat = pointsMaterial({ galaxy: true, spin: GALAXY_SPIN, twinkle: 0.15, sizeMul: 0.9 });
   group.add(makePoints(b, diskMat));
 
-  const bulge = glowBillboard(0xfff0d6, 0xffb36b);
+  const bulge = glowBillboard(0xf6eaff, 0xc2185b);
   bulge.mesh.scale.setScalar(2.6);
   group.add(bulge.mesh);
 
@@ -527,7 +527,7 @@ export function buildWeb(r: Rand, low: boolean): Level {
       const rr = Math.abs(gauss(r)) * sg;
       unitVector(r, tmp).multiplyScalar(rr).add(p);
       nb.pos.set([tmp.x, tmp.y, tmp.z], k * 3);
-      writeColor(nb.color, k, weighted(r, [[0xfff1dc, 3], [0xffd9a0, 2], [0xc9d2ff, 1]]), 0.55 + 0.3 * r());
+      writeColor(nb.color, k, weighted(r, [[0xf2f7ff, 3], [0xff7aa8, 2], [0xc9d2ff, 1]]), 0.55 + 0.3 * r());
       nb.size[k] = 1.4 + 2 * Math.pow(r(), 3);
       nb.seed[k] = r();
     }
